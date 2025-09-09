@@ -1,0 +1,29 @@
+{
+  "name": "extreme_typing",
+  "version": "1.0.0",
+  "description": "たまたまエンジニア同士で雑談していたときの話の流れから着想したものです。",
+  "main": "index.js",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i3systems-toolbox/extreme_typing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/i3systems-toolbox/extreme_typing/issues"
+  },
+  "homepage": "https://github.com/i3systems-toolbox/extreme_typing#readme",
+  "dependencies": {
+    "@nuxt/ui": "^3.3.3",
+    "nuxt": "^4.1.1"
+  }
+}
