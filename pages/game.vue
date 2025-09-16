@@ -1,69 +1,54 @@
 <template>
-  <div class="min-h-screen bg-gray-900 p-4" tabindex="0" @keydown="onKeyDown" ref="gameContainer">
-    <div class="max-w-4xl mx-auto">
-      <!-- ヘッダー -->
-      <div class="mb-6 text-center">
-        <h1 class="text-3xl font-bold text-white mb-2">Extreme Typing</h1>
-        <div class="flex justify-center space-x-6 text-sm text-gray-300">
-          <div>プレイヤー: <span class="font-medium text-white">{{ playerName }}</span></div>
-          <div>時間: <span class="font-medium text-white">{{ formatTime(timeRemaining) }}</span></div>
-          <div>WPM: <span class="font-medium text-white">{{ wpm }}</span></div>
-          <div v-if="gameState === 'playing'">進捗: <span class="font-medium text-white">{{ currentIndex }}/{{ currentProblem.length }}</span></div>
-        </div>
-      </div>
-
-      <!-- ゲームエリア -->
-      <UCard class="mb-6 bg-gray-800 border-gray-700">
-        <div class="p-6">
-          <div class="text-2xl font-mono leading-relaxed p-6 bg-gray-900 rounded-lg min-h-24 flex flex-wrap items-center">
-            <span 
-              v-for="(char, index) in currentProblem" 
-              :key="index"
-              :class="getCharClass(index)"
-              class="transition-all duration-150"
-            >{{ char }}</span>
+  <div class="crt-bg min-h-screen" tabindex="0" @keydown="onKeyDown" ref="gameContainer">
+    <div class="crt-pc-frame">
+      <div class="crt-card crt-game-outer flex flex-col items-center justify-center relative overflow-hidden h-full">
+        <div class="crt-game-inner flex flex-col items-stretch justify-between w-full h-full gap-4 z-10" style="height:100%;min-height:100%;">
+          <!-- タイトル -->
+          <div class="crt-neonbox crt-titlebox-game flex flex-col items-center mb-2" style="flex:0 0 auto;">
+            <span class="crt-mini-icon">⌨️</span>
+            <div class="crt-ready-text">Extreme Typing</div>
           </div>
-          
+          <!-- ステータス -->
+          <div class="crt-neonbox crt-statusbox flex flex-row flex-wrap items-center justify-center gap-6 px-8 py-2 mb-2" style="flex:0 0 auto;">
+            <span class="crt-label">プレイヤー：</span><span class="crt-value">{{ playerName }}</span>
+            <span class="crt-label">時間：</span><span class="crt-value">{{ formatTime(timeRemaining) }}</span>
+            <span class="crt-label">WPM：</span><span class="crt-value">{{ wpm }}</span>
+            <template v-if="gameState === 'playing'">
+              <span class="crt-label">進捗：</span><span class="crt-value">{{ currentIndex }}/{{ currentProblem.length }}</span>
+            </template>
+          </div>
+          <!-- 問題 -->
+          <div class="crt-neonbox crt-problembox w-full flex items-center justify-center px-6 py-4 mb-2" style="flex:0 0 auto; min-height:120px; max-height:180px; height:150px;">
+            <div class="crt-terminal-problem w-full text-center" style="overflow:auto; height:100%; display:flex; align-items:center; justify-content:center;">
+              <span v-for="(char, index) in currentProblem" :key="index" :class="getCharClass(index)" class="crt-char">{{ char }}</span>
+            </div>
+          </div>
           <!-- エラー時の爆発エフェクト -->
-          <div 
-            v-if="showExplosion" 
-            class="fixed inset-0 pointer-events-none z-50 flex items-center justify-center"
-          >
+          <div v-if="showExplosion" class="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
             <div class="explosion-effect">
               <div class="explosion-ring"></div>
               <div class="explosion-flash"></div>
             </div>
           </div>
+          <!-- ボタン -->
+          <div class="crt-neonbox crt-btnbox flex flex-row items-center justify-center gap-6 w-full px-6 py-3 mb-2" style="flex:0 0 auto;">
+            <button v-if="gameState === 'waiting'" class="crt-btn crt-btn-main w-1/2" @click="startGame">ゲーム開始（60秒）</button>
+            <button class="crt-btn w-1/2" @click="goHome">ホームに戻る</button>
+          </div>
+          <!-- ガイド -->
+          <div v-if="gameState === 'waiting'" class="crt-neonbox crt-guidebox w-full px-6 py-3 mt-2" style="flex:1 1 30%;min-height:90px;">
+            <pre class="crt-terminal-guide text-left">
+│  <span class="crt-guide-strong">操作方法</span>
+│  ・表示された単語やコードを正確に入力
+│  ・スペースや記号も正確にタイプしてください
+│  ・制限時間内にできるだけ多く正解しよう
+            </pre>
+          </div>
         </div>
-      </UCard>
-
-      <!-- コントロール -->
-      <div class="text-center space-x-2">
-        <UButton 
-          v-if="gameState === 'waiting'" 
-          @click="startGame"
-          size="lg"
-          color="green"
-        >
-          ゲーム開始 (60秒)
-        </UButton>
-        
-        <UButton 
-          variant="ghost" 
-          @click="goHome"
-          color="gray"
-        >
-          ホームに戻る
-        </UButton>
-      </div>
-
-      <!-- インストラクション -->
-      <div v-if="gameState === 'waiting'" class="text-center mt-4 text-gray-400 text-sm">
-        ゲーム開始後、キーボードで直接入力してください
       </div>
     </div>
   </div>
-</template>
+ </template>
 
 <script setup>
 const router = useRouter()
@@ -105,11 +90,11 @@ const formatTime = (seconds) => {
 
 const getCharClass = (index) => {
   if (index < currentIndex.value) {
-    return 'text-green-400 bg-green-900/30 rounded px-1'
+    return 'crt-char-done';
   } else if (index === currentIndex.value) {
-    return 'text-yellow-300 bg-yellow-900/50 rounded animate-pulse px-1'
+    return 'crt-char-current';
   } else {
-    return 'text-gray-400 px-1'
+    return 'crt-char-rest';
   }
 }
 
@@ -217,6 +202,178 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap');
+.crt-bg {
+  min-height: 100vh;
+  width: 100vw;
+  background: url('../public/Gemini_Generated_Image_88gx288gx288gx28.png') no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
+  overflow: hidden;
+}
+.crt-pc-frame {
+  position: absolute;
+  top: 15%;
+  left: 26%;
+  width: 48vw;
+  height: 57vh;
+  min-width: 340px;
+  min-height: 420px;
+  max-width: 900px;
+  max-height: 700px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  pointer-events: none;
+}
+.crt-card {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  min-width: 320px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  padding: 1.2% 2% 1.2% 2%;
+  box-sizing: border-box;
+  pointer-events: auto;
+  background: rgba(20,32,20,0.92);
+  border-radius: 18px;
+  box-shadow: 0 0 0 2px #0f0, 0 0 24px 2px #0f08, 0 0 80px 0 #0f04;
+  border: 2px solid #0f0;
+  font-family: 'IBM Plex Mono', 'Consolas', 'Menlo', 'monospace';
+  color: #b6ffb6;
+  text-shadow: 0 0 2px #0f0, 0 0 8px #0f08;
+  filter: contrast(1.1) brightness(1.1);
+  position: relative;
+}
+.crt-mini-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.2em;
+  filter: drop-shadow(0 0 6px #0f0);
+}
+.crt-ready-text {
+  font-size: 1.2rem;
+  color: #7fff7f;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.2em;
+  text-shadow: 0 0 8px #0f0, 0 0 16px #0f08;
+}
+.crt-label {
+  color: #7fff7f;
+  font-size: 1rem;
+  font-family: inherit;
+}
+.crt-value {
+  color: #b6ffb6;
+  font-size: 1.1rem;
+  font-family: inherit;
+  margin-right: 0.7em;
+}
+.crt-char {
+  transition: all 0.15s;
+  padding: 0 0.1em;
+  border-radius: 3px;
+  font-size: 1.18rem;
+  line-height: 1.7;
+  font-family: inherit;
+}
+
+/* 入力済み文字 */
+.crt-char-done {
+  color: #7fff7f;
+  background: rgba(0,255,0,0.13);
+  border-bottom: 2px solid #7fff7f;
+  font-weight: bold;
+}
+/* 現在入力位置 */
+.crt-char-current {
+  color: #ffe066;
+  background: rgba(255,255,0,0.18);
+  border-bottom: 2.5px solid #ffe066;
+  font-weight: bold;
+  animation: crt-cursor-blink 0.7s steps(1) infinite;
+}
+@keyframes crt-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+/* 未入力文字 */
+.crt-char-rest {
+  color: #b6ffb633;
+  background: none;
+  border-bottom: 2px solid transparent;
+}
+.crt-btn {
+  background: #111;
+  color: #0f0;
+  font-family: 'IBM Plex Mono', 'Consolas', 'Menlo', 'monospace';
+  font-size: 1.1rem;
+  border: 2px solid #0f0;
+  border-radius: 6px;
+  box-shadow: 0 0 8px #0f0a, 0 0 32px #0f08;
+  padding: 0.7em 1.8em;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  position: relative;
+  z-index: 1;
+}
+.crt-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.crt-btn-main {
+  background: #111;
+  color: #0f0;
+  border: 2.5px solid #0f0;
+  border-radius: 8px;
+  box-shadow: 0 0 12px #0f0a, 0 0 32px #0f08;
+}
+.crt-btn-main:hover {
+  background: #222;
+  color: #b6ffb6;
+  box-shadow: 0 0 24px #0f0, 0 0 64px #0f08;
+}
+.crt-guide-strong {
+  color: #ffe066;
+  font-weight: bold;
+}
+.crt-bg:after {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.08) 0px,
+    rgba(0,0,0,0.08) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  z-index: 2;
+}
+.crt-card:after {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,255,0,0.04) 0px,
+    rgba(0,255,0,0.04) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  z-index: 2;
+}
+/* 爆発エフェクトは既存のまま */
 .explosion-effect {
   position: relative;
   width: 200px;
@@ -245,6 +402,17 @@ onUnmounted(() => {
   background: radial-gradient(circle, #fbbf24, #ef4444, #dc2626);
   border-radius: 50%;
   animation: explosion-flash 0.3s ease-out forwards;
+}
+
+/* スペース用の強調 */
+.crt-char-space {
+  background: rgba(255,255,255,0.08) !important;
+  color: #ffe066 !important;
+  border-bottom: 2px dashed #ffe066 !important;
+  font-style: italic;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 6px #ffe06699;
 }
 
 @keyframes explosion-ring {
