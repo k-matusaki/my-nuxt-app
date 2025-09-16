@@ -1,13 +1,6 @@
 
 <template>
   <div class="crt-bg min-h-screen">
-    <!-- タイトル・説明文をゲーム画面外に分離 -->
-      <div class="crt-titlebox">
-        <h1 class="crt-title">Extreme Typing</h1>
-        <p class="crt-subtitle">レトロPCタイピングバトル</p>
-        <p class="crt-desc">80年代・90年代のPCでタイピングバトル！<br>コマンドライン風の世界でスコアを競え！</p>
-        <p class="crt-meta">SPEED | ACCURACY | CODE POWER</p>
-      </div>
     <!-- ゲーム画面本体のみ -->
     <div class="crt-pc-frame">
       <div class="crt-card p-8 flex flex-col items-center relative overflow-hidden">
@@ -47,6 +40,40 @@
   pointer-events: none;
   min-width: 260px;
   max-width: 330px;
+   /* タブレット以下は中央寄せ・幅調整 */
+
+@media (max-width: 1024px) {
+  .crt-titlebox {
+    position: static;
+    margin: 2vh auto 0 auto;
+    left: 0;
+    right: 0;
+    min-width: 180px;
+    max-width: 90vw;
+    width: auto;
+    display: block;
+    pointer-events: auto;
+    z-index: 20;
+    margin-bottom: 2vh;
+  }
+  .crt-pc-frame {
+    position: static;
+    margin: 4vh auto 0 auto;
+    margin-top: 0;
+    width: 98vw;
+    min-width: 260px;
+    max-width: 700px;
+    height: auto;
+    min-height: 340px;
+    max-height: 90vh;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    pointer-events: none;
+  }
+}
 }
 .crt-titlebox .crt-title {
   margin-bottom: 0.1em;
