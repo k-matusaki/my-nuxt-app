@@ -59,6 +59,7 @@ const gameState = ref('waiting') // waiting, playing, finished
 const currentProblem = ref('')
 const currentIndex = ref(0)
 const totalTypedChars = ref(0)
+const missTypedChars = ref(0)
 const timeRemaining = ref(60)
 const wpm = ref(0)
 const showExplosion = ref(false)
@@ -159,6 +160,8 @@ const onKeyDown = (event) => {
     }
   } else {
     // 間違い - 爆発エフェクト
+    missTypedChars.value++
+    totalTypedChars.value++
     triggerExplosion()
   }
 }
@@ -185,19 +188,28 @@ const calculateWPM = () => {
   wpm.value = Math.round(wordsTyped / elapsed) || 0
 }
 
-const endGame = () => {
+const endGame = async () => {
   gameState.value = 'finished'
-  clearInterval(gameTimer)
-  
+  if (gameTimer) {
+    clearInterval(gameTimer)
+    gameTimer = null
+  }
+  // 正確性計算
+  let accuracy = 100
+  if (totalTypedChars.value > 0) {
+    accuracy = Math.round(100 * (totalTypedChars.value - missTypedChars.value) / totalTypedChars.value)
+  }
   // 結果を保存
   const result = {
     playerName: playerName.value,
     wpm: wpm.value,
-    accuracy: 100, // 間違いは進まないので100%
+    accuracy,
+    totalTypedChars: totalTypedChars.value,
+    missTypedChars: missTypedChars.value,
     timestamp: Date.now()
   }
-  
   localStorage.setItem('gameResult', JSON.stringify(result))
+  await nextTick()
   router.push('/result')
 }
 

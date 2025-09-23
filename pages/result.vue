@@ -11,6 +11,8 @@
           <div><span class="crt-label">プレイヤー名:</span> <span class="crt-value">{{ result.playerName }}</span></div>
           <div><span class="crt-label">WPM:</span> <span class="crt-value">{{ result.wpm }}</span></div>
           <div><span class="crt-label">正確性:</span> <span class="crt-value">{{ result.accuracy }}%</span></div>
+          <div><span class="crt-label">入力キー数:</span> <span class="crt-value">{{ result.totalTypedChars }}</span></div>
+          <div><span class="crt-label">ミスキー数:</span> <span class="crt-value">{{ result.missTypedChars }}</span></div>
         </div>
         <div class="crt-feedback">
           <template v-if="result.wpm >= 60">
