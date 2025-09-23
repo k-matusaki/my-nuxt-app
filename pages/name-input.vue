@@ -1,5 +1,5 @@
 <template>
-<div class="crt-bg min-h-screen">
+<div class="crt-bg min-h-screen" tabindex="0" @keydown="onKeyDown">
   <div class="crt-pc-frame">
     <div class="crt-card p-8 flex flex-col items-center justify-center relative overflow-hidden">
       <div class="crt-game-header text-center z-10">
@@ -21,6 +21,9 @@
           <button type="submit" class="crt-btn crt-btn-main" :disabled="!playerName.trim()">ゲーム開始</button>
         </div>
       </form>
+      <div class="crt-guidebox mt-4 text-center" style="font-size:0.98em;color:#ffe066;">
+        Enterで決定、Escで戻る、Tabでボタン移動
+      </div>
     </div>
   </div>
 </div>
@@ -43,6 +46,22 @@ const startGame = () => {
   error.value = ''
   localStorage.setItem('playerName', playerName.value.trim())
   router.push('/game')
+}
+
+const onKeyDown = (event) => {
+  // Enterで決定
+  if (event.key === 'Enter') {
+    event.preventDefault()
+    if (playerName.value.trim()) {
+      startGame()
+    }
+  }
+  // Escで戻る
+  if (event.key === 'Escape') {
+    event.preventDefault()
+    goBack()
+  }
+  // Tabはデフォルトでボタン移動
 }
 </script>
 

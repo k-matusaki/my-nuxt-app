@@ -32,8 +32,8 @@
           </div>
           <!-- ボタン -->
           <div class="crt-neonbox crt-btnbox flex flex-row items-center justify-center gap-6 w-full px-6 py-3 mb-2" style="flex:0 0 auto;">
-            <button v-if="gameState === 'waiting'" class="crt-btn crt-btn-main w-1/2" @click="startGame">ゲーム開始（60秒）</button>
-            <button class="crt-btn w-1/2" @click="goHome">ホームに戻る</button>
+            <button v-if="gameState === 'waiting'" class="crt-btn crt-btn-main w-1/2" @click="startGame" type="button">ゲーム開始（60秒）</button>
+            <button class="crt-btn w-1/2" @click="goHome" type="button" @keydown.esc="goHome">ホームに戻る</button>
           </div>
           <!-- ガイド -->
           <div v-if="gameState === 'waiting'" class="crt-neonbox crt-guidebox w-full px-6 py-3 mt-2" style="flex:1 1 30%;min-height:90px;">
@@ -120,25 +120,39 @@ const startGame = () => {
 }
 
 const onKeyDown = (event) => {
+  // ゲーム待機中: Enterで開始
+  if (gameState.value === 'waiting' && event.key === 'Enter') {
+    event.preventDefault()
+    startGame()
+    return
+  }
+
+  // ゲーム終了: Enterでホームに戻る
+  if (gameState.value === 'finished' && event.key === 'Enter') {
+    event.preventDefault()
+    goHome()
+    return
+  }
+
   if (gameState.value !== 'playing') return
-  
-  // 特殊キーは無視
-  if (event.key === 'Tab' || event.key === 'Enter' || event.key === 'Escape' || 
+
+  // 特殊キーは無視（Enterは上記で処理済み）
+  if (event.key === 'Tab' || event.key === 'Escape' || 
       event.key === 'Shift' || event.key === 'Control' || event.key === 'Alt' ||
       event.key === 'Meta' || event.key.startsWith('Arrow') || event.key.startsWith('F')) {
     event.preventDefault()
     return
   }
-  
+
   event.preventDefault()
-  
+
   const expectedChar = currentProblem.value[currentIndex.value]
-  
+
   if (event.key === expectedChar) {
     // 正解
     currentIndex.value++
     totalTypedChars.value++
-    
+
     // 問題完了チェック
     if (currentIndex.value >= currentProblem.value.length) {
       nextProblem()

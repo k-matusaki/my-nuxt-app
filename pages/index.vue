@@ -1,6 +1,6 @@
 
 <template>
-  <div class="crt-bg min-h-screen">
+  <div class="crt-bg min-h-screen" tabindex="0" @keydown="onKeyDown">
     <!-- ゲーム画面本体のみ -->
     <div class="crt-pc-frame">
       <div class="crt-card p-8 flex flex-col items-center relative overflow-hidden">
@@ -9,9 +9,7 @@
           <div class="crt-ready-text">Extreme Typing Ready!</div>
         </div>
         <div class="crt-guide-box z-10">
-          <pre class="crt-terminal">
-
-
+          <pre class="crt-terminal crt-guide-oneline">
 │  <span class="crt-guide-strong">操作方法</span>
 │  ・表示された単語やコードを正確に入力
 │  ・スペースや記号も正確にタイプしてください
@@ -113,6 +111,11 @@ html, body {
   letter-spacing: 0.08em;
   margin-bottom: 0.2em;
   text-shadow: 0 0 8px #0f0, 0 0 16px #0f08;
+}
+.crt-guide-oneline {
+  font-size: 0.8rem;
+  white-space: pre;
+  overflow-x: auto;
 }
 .crt-btn-main {
   font-size: 1.18rem;
@@ -269,7 +272,7 @@ html, body {
   background: rgba(0,0,0,0.7);
   color: #7fff7f;
   font-family: 'IBM Plex Mono', 'Consolas', 'Menlo', 'monospace';
-  font-size: 1.05rem;
+  font-size: 0.8rem;
   border-radius: 8px;
   border: 1.5px solid #0f0;
   box-shadow: 0 0 8px #0f0a, 0 0 32px #0f08;
@@ -341,5 +344,13 @@ const router = useRouter()
 
 const startChallenge = () => {
   router.push('/name-input')
+}
+
+const onKeyDown = (event) => {
+  // Enterキーでゲームスタート
+  if (event.key === 'Enter') {
+    event.preventDefault()
+    startChallenge()
+  }
 }
 </script>
