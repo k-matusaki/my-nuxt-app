@@ -71,60 +71,43 @@ const problems = [
   'bundle install',
   'bundle exec rails s -p 4000',
   'bundle exec rails c',
-  'bundle exec rails g model User name:string admin:boolean',
-  'bundle exec rails g migration AddIndexToUsersEmail',
   'bundle exec rails db:migrate',
   'bundle exec rails db:rollback STEP=1',
   'RAILS_ENV=test bundle exec rails db:prepare',
-  'RAILS_ENV=test bundle exec rails db:migrate:reset',
-  'RAILS_ENV=production bundle exec rails assets:precompile',
   'bundle exec rails db:seed',
   'RAILS_ENV=test bundle exec rails db:seed',
-  'bundle exec rails db:migrate VERSION=20240101000000',
   'bundle exec rails routes | grep users',
   'bundle exec rails routes | grep admin',
-  'curl -H "Authorization: Token token=SECRET" http://localhost:3000/api/v1/users',
   "User.find_by(email: 'admin@example.com')",
   'bundle exec rails c --sandbox',
   'bundle exec rspec spec/models/user_spec.rb',
-  'bundle exec rspec spec/requests/users_spec.rb',
+  'bundle exec rspec spec/requests/user_spec.rb',
   'bundle exec rspec --format documentation',
   'bundle exec rake spec',
   'bundle exec rubocop -A',
   'bundle exec brakeman -q',
-  'DISABLE_SPRING=1 bundle exec rails g job CleanupOldSessions',
-  'DISABLE_SPRING=1 bundle exec rails g task maintenance:purge_tmp',
   'bundle exec sidekiq -q default -q mailers',
   'bundle exec whenever --update-crontab',
   'bundle exec rails tmp:cache:clear',
   'bundle exec rails log:clear',
   'bundle exec rails dbconsole',
-  'PGPASSWORD=secret psql -h localhost -U postgres app_development',
   'class User < ActiveRecord::Base',
   'class Admin::UserPolicy < ApplicationPolicy',
   'FactoryBot.create_list(:user, 3)',
   'rails new demo_app -d postgresql',
   'bin/rails credentials:edit',
   'EDITOR=vim bin/rails credentials:edit',
-  'bundle exec rails g migration CreateAuditLogs user:references action:string',
-  'bundle exec rails g scaffold Post title:string body:text published:boolean',
-  'bundle exec rails g migration AddDeletedAtToUsers deleted_at:datetime:index',
   'bundle exec rails db:migrate:status',
-  'RAILS_ENV=production bundle exec rails db:version',
   'bundle exec rake -T db',
   'bundle exec rails about',
   'bundle exec rails stats',
-  'RAILS_ENV=test bundle exec rails assets:clobber',
   'bundle exec rails middleware',
   'bundle exec rails initializers',
   'bundle exec rails zeitwerk:check',
   'bundle exec rails routes | wc -l',
   'bundle exec rails notes',
-  'bundle exec rails notes:custom ANNOTATION=SECURITY',
-  'bundle exec rails db:abort_if_pending_migrations',
   'bundle exec rails app:update',
   'BUNDLE_WITHOUT=production bundle install',
-  'RAILS_MAX_THREADS=5 bundle exec puma -C config/puma.rb'
 ]
 
 onMounted(() => {
@@ -289,12 +272,12 @@ onUnmounted(() => {
 .crt-pc-frame {
   position: absolute;
   top: 15%;
-  left: 26%;
-  width: 48vw;
+  left: calc(26% - 20px);
+  width: calc(48vw + 40px);
   height: 57vh;
-  min-width: 340px;
+  min-width: 360px;
   min-height: 420px;
-  max-width: 900px;
+  max-width: 940px;
   max-height: 700px;
   display: flex;
   align-items: stretch;
@@ -354,7 +337,7 @@ onUnmounted(() => {
   transition: all 0.15s;
   padding: 0 0.1em;
   border-radius: 3px;
-  font-size: 1.18rem;
+  font-size: 0.98rem;
   line-height: 1.7;
   font-family: inherit;
 }
