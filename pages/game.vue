@@ -93,7 +93,6 @@ const problems = [
   'bundle exec rails dbconsole',
   'class User < ActiveRecord::Base',
   'class Admin::UserPolicy < ApplicationPolicy',
-  'FactoryBot.create_list(:user, 3)',
   'rails new demo_app -d postgresql',
   'bin/rails credentials:edit',
   'EDITOR=vim bin/rails credentials:edit',
