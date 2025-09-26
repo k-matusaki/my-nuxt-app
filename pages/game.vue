@@ -32,7 +32,7 @@
           </div>
           <!-- ボタン -->
           <div class="crt-neonbox crt-btnbox flex flex-row items-center justify-center gap-6 w-full px-6 py-3 mb-2" style="flex:0 0 auto;">
-            <button v-if="gameState === 'waiting'" class="crt-btn crt-btn-main w-1/2" @click="startGame" type="button">ゲーム開始（60秒）</button>
+            <button v-if="gameState === 'waiting'" class="crt-btn crt-btn-main w-1/2" @click="startGame" type="button">ゲーム開始（30秒）</button>
             <button class="crt-btn w-1/2" @click="goHome" type="button" @keydown.esc="goHome">ホームに戻る</button>
           </div>
           <!-- ガイド -->
@@ -60,7 +60,7 @@ const currentProblem = ref('')
 const currentIndex = ref(0)
 const totalTypedChars = ref(0)
 const missTypedChars = ref(0)
-const timeRemaining = ref(60)
+const timeRemaining = ref(30)
 const wpm = ref(0)
 const showExplosion = ref(false)
 let gameTimer = null
@@ -134,7 +134,7 @@ const getCharClass = (index) => {
 const startGame = () => {
   gameState.value = 'playing'
   startTime = Date.now()
-  timeRemaining.value = 60
+  timeRemaining.value = 30
   currentIndex.value = 0
   totalTypedChars.value = 0
   
